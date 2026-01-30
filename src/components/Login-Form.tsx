@@ -20,6 +20,7 @@ import type { LoginFormValues } from "@/types/login";
 import { useLoginUser } from "@/service/user/useUserService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { setToken } from "@/lib/auth";
 export function LoginForm({
   className,
   ...props
@@ -36,8 +37,8 @@ export function LoginForm({
     onSubmit: async (values, { resetForm }) => {
       try {
         const res = await mutateAsync(values);
-        localStorage.setItem("access_token",res.access_token)
-        localStorage.setItem("refersh_token",res.refresh_token)
+        // 
+        setToken(res.access_token,res.access_token)
         console.log(res); // accessToken, refreshToken
         navigate("/");
         toast.success("Logged in successfully 🎉");
