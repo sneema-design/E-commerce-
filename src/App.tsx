@@ -1,4 +1,5 @@
 import "./App.css";
+
 // import Login from './pages/Login'
 import { Routes, Route } from "react-router-dom";
 import { ROUTES } from "./constants/ROUTES";
@@ -10,13 +11,12 @@ import Product from "./pages/Product";
 function App() {
   return (
     <>
-     <Toaster richColors position="top-right" />
+      <Toaster richColors position="top-right" />
       <Routes>
-        <Route path={ROUTES.HOME} element={<Home/>}/>
-        <Route path={ROUTES.LOGIN} element={<Login/>}/>
-        <Route path={ROUTES.SIGNUP} element={<SignUp/>}/>
-        <Route path="/product/:id" element={<Product/>} />
-
+        <Route path={ROUTES.HOME} element={<Home />} />
+        <Route path={ROUTES.LOGIN} element={<Login />} />
+        <Route path={ROUTES.SIGNUP} element={<SignUp />} />
+        <Route path="/product/:id" element={<Product />} />
       </Routes>
     </>
   );

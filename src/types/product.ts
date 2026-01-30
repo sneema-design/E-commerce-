@@ -1,5 +1,5 @@
-export interface Product{
-   id: number;
+export interface Product {
+  id: number;
   title: string;
   slug: string;
   price: number;
@@ -10,8 +10,8 @@ export interface Product{
   updatedAt: string;
 }
 
-export interface Category{
-    id: number;
+export interface Category {
+  id: number;
   name: string;
   slug: string;
   image: string;

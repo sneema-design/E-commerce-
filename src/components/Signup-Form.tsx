@@ -1,7 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { useCreateUser } from "@/service/user/useUserService";
-import {Card,CardContent,CardDescription,CardHeader,CardTitle,} from "@/components/ui/card";
-import {Field,FieldDescription,FieldGroup,FieldLabel,} from "@/components/ui/field";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { useFormik } from "formik";
 import type { SignupFormValues } from "@/types/signup";
@@ -10,7 +21,7 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/ROUTES";
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { mutateAsync, isPending } = useCreateUser();
   const formik = useFormik<SignupFormValues>({
     initialValues: {
@@ -23,12 +34,12 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     validateOnChange: true,
     onSubmit: async (values, { resetForm }) => {
       try {
-        const res=await mutateAsync(values);
-        console.log(res.email,res.name,res.role);
-        toast("Account created successfully")
-        navigate(ROUTES.HOME,{
-          state:{Username:res.name}
-        })
+        const res = await mutateAsync(values);
+        console.log(res.email, res.name, res.role);
+        toast("Account created successfully");
+        navigate(ROUTES.HOME, {
+          state: { Username: res.name },
+        });
         resetForm();
       } catch (err) {
         // error already handled by React Query

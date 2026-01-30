@@ -37,8 +37,8 @@ export function LoginForm({
     onSubmit: async (values, { resetForm }) => {
       try {
         const res = await mutateAsync(values);
-        // 
-        setToken(res.access_token,res.access_token)
+        //
+        setToken(res.access_token, res.access_token);
         console.log(res); // accessToken, refreshToken
         navigate("/");
         toast.success("Logged in successfully 🎉");

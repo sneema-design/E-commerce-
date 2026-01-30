@@ -1,5 +1,5 @@
-import { faker } from "@faker-js/faker"
-import { Bath, Bed, Maximize } from "lucide-react"
+import { faker } from "@faker-js/faker";
+import { Bath, Bed, Maximize } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -7,18 +7,20 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "~/components/ui/card"
+} from "~/components/ui/card";
 
-const price = faker.commerce.price({ min: 100_000, max: 500_000, dec: 0 })
-const beds = faker.number.int({ min: 2, max: 5 })
-const baths = faker.number.int({ min: 1, max: 3 })
-const area = faker.number.int({ min: 200, max: 500 })
+const price = faker.commerce.price({ min: 100_000, max: 500_000, dec: 0 });
+const beds = faker.number.int({ min: 2, max: 5 });
+const baths = faker.number.int({ min: 1, max: 3 });
+const area = faker.number.int({ min: 200, max: 500 });
 
 const Example = () => (
   <Card className="w-full max-w-md overflow-hidden">
     <CardHeader>
       <CardTitle>3-Bedroom House</CardTitle>
-      <CardDescription>A luxurious 3-bedroom house with a modern design.</CardDescription>
+      <CardDescription>
+        A luxurious 3-bedroom house with a modern design.
+      </CardDescription>
     </CardHeader>
     <CardContent className="p-0">
       <img
@@ -46,6 +48,6 @@ const Example = () => (
       <p className="font-bold text-2xl">${Number(price).toLocaleString()}</p>
     </CardFooter>
   </Card>
-)
+);
 
-export default Example
+export default Example;
