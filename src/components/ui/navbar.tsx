@@ -25,7 +25,7 @@ const Logo = (props: React.SVGAttributes<SVGElement>) => {
       height="1em"
       viewBox="0 0 324 323"
       width="1em"
-      xmlns="http://www.w3.org3.org/2000/svg"
+      xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <rect fill="currentColor" height="323" rx="161.5" width="323" x="0.5" />
@@ -75,6 +75,7 @@ const defaultNavigationLinks: NavbarNavLink[] = [
   { href: "/orders", label: "Orders" },
   { href: "/cart", label: "Cart" },
 ];
+
 
 /* ===================== NAVBAR ===================== */
 export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
@@ -129,7 +130,8 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                           <Button
                             variant="ghost"
                             className="w-full justify-start"
-                            onClick={() => navigate(link.href)}
+                            onClick={() => navigate(ROUTES.CATEGORY(cat.slug))}
+
                           >
                             {link.label}
                           </Button>
@@ -152,16 +154,20 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
             {!isMobile && (
               <NavigationMenu>
                 <NavigationMenuList className="gap-2">
-                  {navigationLinks.map((link) => (
-                    <NavigationMenuItem key={link.href}>
-                      <Button
-                        variant="ghost"
-                        onClick={() => navigate(link.href)}
-                      >
-                        {link.label}
-                      </Button>
-                    </NavigationMenuItem>
-                  ))}
+                  {/* Home */}
+                  <NavigationMenuItem>
+                    <Button variant="ghost" onClick={() => navigate("/")}>Home</Button>
+                  </NavigationMenuItem>
+
+                  {/* Orders */}
+                  <NavigationMenuItem>
+                    <Button variant="ghost" onClick={() => navigate("/orders")}>Orders</Button>
+                  </NavigationMenuItem>
+
+                  {/* Cart */}
+                  <NavigationMenuItem>
+                    <Button variant="ghost" onClick={() => navigate("/cart")}>Cart</Button>
+                  </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
             )}

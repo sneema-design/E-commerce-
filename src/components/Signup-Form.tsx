@@ -122,8 +122,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
                   {isPending ? "Creating account..." : "Create Account"}
                 </Button>
 
-                <FieldDescription className="px-6 text-center">
-                  Already have an account? <a href="#">Sign in</a>
+                <FieldDescription className="px-6 text-center" >
+                  Already have an account? <a  href="#" onClick={()=>navigate(ROUTES.LOGIN)}>Login</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>

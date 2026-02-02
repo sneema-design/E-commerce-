@@ -18,3 +18,11 @@ export interface Category {
   creationAt: string;
   updatedAt: string;
 }
+ export interface ProductFilter{
+  title?: string,
+  categoryId?: number,
+  priceMin?:number,
+  priceMax?:number,
+  limit?:number,
+  offset?:number,
+ }

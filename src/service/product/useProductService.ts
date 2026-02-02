@@ -1,11 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import type { Product } from "@/types/product";
 import { ProductServices } from "./productService";
-
-export const useGetAllProduct = () => {
+import type { ProductFilter } from "@/types/product";
+export const useGetAllProduct = (filters?: ProductFilter) => {
   return useQuery<Product[], Error>({
-    queryKey: ["all-products"],
-    queryFn: ProductServices.getAllProduct,
+    queryKey: [
+      "all-products",
+      filters?.title,
+      filters?.categoryId,
+      filters?.priceMin,
+      filters?.priceMax,
+      filters?.limit,
+      filters?.offset, 
+    ],
+    queryFn: () => ProductServices.getAllProduct(filters),
+    placeholderData: (previousData) => previousData,
   });
 };
 

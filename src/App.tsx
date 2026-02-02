@@ -8,15 +8,19 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import { Toaster } from "sonner";
 import Product from "./pages/Product";
+import { Navbar } from "./components/ui/navbar";
 function App() {
   return (
     <>
+            <Navbar />
+
       <Toaster richColors position="top-right" />
       <Routes>
         <Route path={ROUTES.HOME} element={<Home />} />
         <Route path={ROUTES.LOGIN} element={<Login />} />
         <Route path={ROUTES.SIGNUP} element={<SignUp />} />
         <Route path="/product/:id" element={<Product />} />
+
       </Routes>
     </>
   );

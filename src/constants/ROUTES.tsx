@@ -1,3 +1,4 @@
+// constants/ROUTES.ts
 export const ROUTES = {
   HOME: "/",
   ABOUT: "/about",
@@ -7,4 +8,9 @@ export const ROUTES = {
   SIGNUP: "/signup",
   PRODUCT: "/product",
   PROFILE: "/profile",
-};
+
+  CATEGORY: "/category",
+  CATEGORY_DETAIL: "/category/:slug",
+
+  category: (slug: string) => `/category/${slug}`,
+} as const;

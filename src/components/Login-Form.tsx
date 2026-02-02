@@ -21,6 +21,7 @@ import { useLoginUser } from "@/service/user/useUserService";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "@/lib/auth";
+import { ROUTES } from "@/constants/ROUTES";
 export function LoginForm({
   className,
   ...props
@@ -107,7 +108,7 @@ export function LoginForm({
                   Login with Google
                 </Button> */}
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Sign up</a>
+                  Don&apos;t have an account? <a href="#" onClick={()=>{navigate(ROUTES.SIGNUP)}}>Sign up</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
