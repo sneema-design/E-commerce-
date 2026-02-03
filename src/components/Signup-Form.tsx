@@ -36,10 +36,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
       try {
         const res = await mutateAsync(values);
         console.log(res.email, res.name, res.role);
-        toast("Account created successfully");
-        navigate(ROUTES.HOME, {
-          state: { Username: res.name },
-        });
+        toast("Account created successfully, Please Login!!");
+        navigate(ROUTES.LOGIN)
         resetForm();
       } catch (err) {
         // error already handled by React Query

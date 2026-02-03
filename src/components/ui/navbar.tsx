@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/ROUTES";
-
+import { isAuthenticated, logout } from "@/lib/auth";
 /* ===================== LOGO ===================== */
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
   return (
@@ -76,7 +76,6 @@ const defaultNavigationLinks: NavbarNavLink[] = [
   { href: "/cart", label: "Cart" },
 ];
 
-
 /* ===================== NAVBAR ===================== */
 export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
   ({ className, navigationLinks = defaultNavigationLinks, ...props }, ref) => {
@@ -131,7 +130,6 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                             variant="ghost"
                             className="w-full justify-start"
                             onClick={() => navigate(ROUTES.CATEGORY(cat.slug))}
-
                           >
                             {link.label}
                           </Button>
@@ -156,17 +154,29 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                 <NavigationMenuList className="gap-2">
                   {/* Home */}
                   <NavigationMenuItem>
-                    <Button variant="ghost" onClick={() => navigate("/")}>Home</Button>
+                    <Button variant="ghost" onClick={() => navigate("/")}>
+                      Home
+                    </Button>
                   </NavigationMenuItem>
 
                   {/* Orders */}
                   <NavigationMenuItem>
-                    <Button variant="ghost" onClick={() => navigate("/orders")}>Orders</Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => navigate(ROUTES.ORDER)}
+                    >
+                      Orders
+                    </Button>
                   </NavigationMenuItem>
 
                   {/* Cart */}
                   <NavigationMenuItem>
-                    <Button variant="ghost" onClick={() => navigate("/cart")}>Cart</Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => navigate(ROUTES.CART)}
+                    >
+                      Cart
+                    </Button>
                   </NavigationMenuItem>
                 </NavigationMenuList>
               </NavigationMenu>
@@ -175,10 +185,16 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 
           {/* RIGHT */}
           <div className="flex items-center gap-3">
-            <Button variant="ghost" onClick={() => navigate(ROUTES.SIGNUP)}>
-              Sign In
-            </Button>
-            <Button onClick={() => navigate("/profile")}>Profile</Button>
+            {isAuthenticated() ? (
+              <Button onClick={() => navigate(ROUTES.PROFILE)}>Profile</Button>
+            ) : null}
+            {isAuthenticated() ? (
+              <Button onClick={() => logout()}>Logout</Button>
+            ) : (
+              <Button variant="ghost" onClick={() => navigate(ROUTES.LOGIN)}>
+                Login
+              </Button>
+            )}
           </div>
         </div>
       </header>

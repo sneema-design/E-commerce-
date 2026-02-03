@@ -1,3 +1,4 @@
+
 export const setToken = (access_token: string, refresh_token: string) => {
   localStorage.setItem("access_token", access_token);
   localStorage.setItem("refresh_token", refresh_token);
@@ -13,3 +14,11 @@ export const clearTokens = () => {
   localStorage.removeItem("access_token");
   localStorage.removeItem("refresh_token");
 };
+
+export const isAuthenticated=():boolean=>{
+      return Boolean(localStorage.getItem("access_token"))
+}
+export const logout=():void=>{
+      localStorage.removeItem("access_token")
+      window.location.href = "/login";
+}
