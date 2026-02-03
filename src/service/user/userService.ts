@@ -2,6 +2,7 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { api } from "@/lib/axios";
 import type { createUserData, LoginUserData, Token, User } from "@/types/user";
+import { getAccessToken } from "@/lib/auth";
 export const createUser = async (userData: createUserData): Promise<User> => {
   try {
     const response: AxiosResponse<User> = await api.post("/users", userData);
@@ -36,3 +37,26 @@ export const LoginUser = async (
     throw new Error("Failed to Login");
   }
 };
+
+export const getProfile=async():Promise<User>=>{
+  try {
+    const token=getAccessToken();
+    const response:AxiosResponse<User>=await api.get("/auth/profile",{
+      
+        headers:{
+          Authorization:`Bearer ${token}`,
+        }
+
+    });
+    return response.data
+  } catch (error:unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data);
+      throw new Error(
+        error.response?.data?.message || "Unable to fetch Profile",
+      );
+    }
+
+    throw new Error("Failed to Fetch Profile");
+  }
+}

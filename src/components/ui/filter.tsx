@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -9,6 +9,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import type { ProductFilter } from "@/types/product";
+import { useDebounce } from "@/hooks/useDebounce";
 
 interface Props {
   onChange: (filters: Partial<ProductFilter>) => void;
@@ -20,10 +21,23 @@ export function ProductsFilter({ onChange }: Props) {
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
 
-  // 🔑 helper to emit filters safely
-  const emitChange = (next: Partial<ProductFilter>) => {
+  // 🔑 debounce search text
+  const debouncedTitle = useDebounce(title, 500);
+
+  // 🔑 emit debounced search
+  useEffect(() => {
     onChange({
-      title: title || undefined,
+      title: debouncedTitle || undefined,
+      categoryId: categoryId ? Number(categoryId) : undefined,
+      priceMin: priceMin ? Number(priceMin) : undefined,
+      priceMax: priceMax ? Number(priceMax) : undefined,
+    });
+  }, [debouncedTitle]);
+
+  // 🔑 helper for immediate filters
+  const emitImmediateChange = (next: Partial<ProductFilter>) => {
+    onChange({
+      title: debouncedTitle || undefined,
       categoryId: categoryId ? Number(categoryId) : undefined,
       priceMin: priceMin ? Number(priceMin) : undefined,
       priceMax: priceMax ? Number(priceMax) : undefined,
@@ -38,7 +52,9 @@ export function ProductsFilter({ onChange }: Props) {
         value={categoryId}
         onValueChange={(value) => {
           setCategoryId(value);
-          emitChange({ categoryId: value ? Number(value) : undefined });
+          emitImmediateChange({
+            categoryId: value ? Number(value) : undefined,
+          });
         }}
       >
         <SelectTrigger className="w-[160px]">
@@ -60,7 +76,7 @@ export function ProductsFilter({ onChange }: Props) {
         value={priceMin}
         onChange={(e) => {
           setPriceMin(e.target.value);
-          emitChange({
+          emitImmediateChange({
             priceMin: e.target.value ? Number(e.target.value) : undefined,
           });
         }}
@@ -74,20 +90,19 @@ export function ProductsFilter({ onChange }: Props) {
         value={priceMax}
         onChange={(e) => {
           setPriceMax(e.target.value);
-          emitChange({
+          emitImmediateChange({
             priceMax: e.target.value ? Number(e.target.value) : undefined,
           });
         }}
       />
 
-      {/* SEARCH */}
+      {/* SEARCH (debounced) */}
       <Input
         placeholder="Search"
         className="w-[200px]"
         value={title}
         onChange={(e) => {
           setTitle(e.target.value);
-          emitChange({ title: e.target.value || undefined });
         }}
       />
 
