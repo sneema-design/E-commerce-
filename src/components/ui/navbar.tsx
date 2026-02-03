@@ -96,6 +96,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
 
       return () => observer.disconnect();
     }, []);
+     const avatar =localStorage.getItem("user_image") ||"/default-avatar.png";
 
     return (
       <header
@@ -186,7 +187,17 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
           {/* RIGHT */}
           <div className="flex items-center gap-3">
             {isAuthenticated() ? (
-              <Button onClick={() => navigate(ROUTES.PROFILE)}>Profile</Button>
+              <Button
+                onClick={() => navigate(ROUTES.PROFILE)}
+                className="w-10 h-10 rounded-full p-0 overflow-hidden"
+                variant="ghost"
+              >
+                <img
+                  src={`${avatar}`}
+                  alt="Profile"
+                  className="w-full h-full object-cover"
+                />
+              </Button>
             ) : null}
             {isAuthenticated() ? (
               <Button onClick={() => logout()}>Logout</Button>
