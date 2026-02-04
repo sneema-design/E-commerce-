@@ -1,4 +1,5 @@
 import CarouselPart from "@/components/Carousel-part";
+import { Footer2 } from "@/components/footer2";
 import ProductPannel from "@/components/ProductPannel";
 import { ProductsFilter } from "@/components/ui/filter";
 import type { ProductFilter } from "@/types/product";
@@ -57,6 +58,7 @@ export default function Home() {
         }
         pageSize={PAGE_SIZE}
       />
+      <Footer2/>
     </>
   );
 }

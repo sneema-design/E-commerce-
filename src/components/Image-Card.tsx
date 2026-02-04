@@ -17,7 +17,7 @@ export const ImageCard = ({ product, onClick }: props) => {
   const { addToCart } = useCart();
 
   return (
-    <Card className="w-full max-w-md overflow-hidden" onClick={onClick}>
+    <Card className="bg-card/90 backdrop-blur-sm border border-border shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-3xl" onClick={onClick}>
       <CardHeader>
         <CardTitle>{product.title}</CardTitle>
         <CardDescription className="line-clamp-1">

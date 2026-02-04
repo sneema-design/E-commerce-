@@ -12,6 +12,6 @@ export const ROUTES = {
   ORDER:"/order",
   CATEGORY: "/category",
   CATEGORY_DETAIL: "/category/:slug",
-
+  PRODUCTS:"/products",
   category: (slug: string) => `/category/${slug}`,
 } as const;

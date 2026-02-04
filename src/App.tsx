@@ -7,12 +7,17 @@ import Home from "./pages/Home";
 import { Toaster } from "sonner";
 import Product from "./pages/Product";
 import { Navbar } from "./components/ui/navbar";
-import ProtectRoutes from "./components/ProtectedRoutes";
+import ProtectRoutes, {
+  AdminProtectRoutes,
+} from "./components/ProtectedRoutes";
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
-
+import { useAuthBootStrap } from "./hooks/useAuthBootstrap";
+import User from "./pages/User";
+import Products from "./pages/Products";
 function App() {
+  // useAuthBootStrap()
   return (
     <>
       <Navbar />
@@ -23,10 +28,14 @@ function App() {
         <Route path={ROUTES.LOGIN} element={<Login />} />
         <Route path={ROUTES.SIGNUP} element={<SignUp />} />
         <Route path={ROUTES.PRODUCT} element={<Product />} />
-        <Route element={<ProtectRoutes/>}>
-           <Route path={ROUTES.CART} element={<Cart/>}/>
-           <Route path={ROUTES.ORDER} element={<Order/>}/>
-           <Route path={ROUTES.PROFILE} element={<Profile/>}/>
+        <Route element={<ProtectRoutes />}>
+          <Route path={ROUTES.CART} element={<Cart />} />
+          <Route path={ROUTES.ORDER} element={<Order />} />
+          <Route path={ROUTES.PROFILE} element={<Profile />} />
+        </Route>
+        <Route element={<AdminProtectRoutes />}>
+          <Route path={ROUTES.USER} element={<User />} />
+          <Route path={ROUTES.PRODUCTS} element={<Products />} />
         </Route>
       </Routes>
     </>

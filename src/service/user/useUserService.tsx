@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { createUser, getProfile, LoginUser } from "./userService";
+import { createUser, getAllUser, getProfile, LoginUser } from "./userService";
 import type { User, createUserData, LoginUserData, Token } from "@/types/user";
 
 export const useCreateUser = () => {
@@ -13,10 +13,16 @@ export const useLoginUser = () => {
   });
 };
 
-export const useGetProfile=()=>{
-  return useQuery<User,Error>({
-    queryKey:["profile"],
-    queryFn:getProfile,
+export const useGetProfile = (access_token: any) => {
+  return useQuery<User, Error>({
+    queryKey: ["profile"],
+    queryFn: () => getProfile(access_token),
   });
-  
-}
+};
+
+export const UsegetAllUser = () => {
+  return useQuery<User[], Error>({
+    queryKey: ["UserAll"],
+    queryFn: getAllUser,
+  });
+};

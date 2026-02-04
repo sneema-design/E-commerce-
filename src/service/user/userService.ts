@@ -2,7 +2,6 @@ import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { api } from "@/lib/axios";
 import type { createUserData, LoginUserData, Token, User } from "@/types/user";
-import { getAccessToken } from "@/lib/auth";
 export const createUser = async (userData: createUserData): Promise<User> => {
   try {
     const response: AxiosResponse<User> = await api.post("/users", userData);
@@ -38,18 +37,16 @@ export const LoginUser = async (
   }
 };
 
-export const getProfile=async():Promise<User>=>{
+export const getProfile = async (access_token: string): Promise<User> => {
   try {
-    const token=getAccessToken();
-    const response:AxiosResponse<User>=await api.get("/auth/profile",{
-      
-        headers:{
-          Authorization:`Bearer ${token}`,
-        }
 
+    const response: AxiosResponse<User> = await api.get("/auth/profile", {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
     });
-    return response.data
-  } catch (error:unknown) {
+    return response.data;
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       console.error(error.response?.data);
       throw new Error(
@@ -58,5 +55,21 @@ export const getProfile=async():Promise<User>=>{
     }
 
     throw new Error("Failed to Fetch Profile");
+  }
+};
+
+export const getAllUser=async():Promise<User[]>=>{
+  try {
+    const response:AxiosResponse<User[]>=await api.get("/users")
+    return response.data;
+  } catch (error:unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data);
+      throw new Error(
+        error.response?.data?.message || "Unable to fetch Profile",
+      );
+    }
+
+    throw new Error("Failed to Fetch Profile")
   }
 }

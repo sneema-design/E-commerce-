@@ -1,14 +1,15 @@
+import { getAccessToken } from "@/lib/auth";
 import { useGetProfile } from "@/service/user/useUserService";
 import { useEffect } from "react";
 
 export default function Profile() {
-  
+  const access_token=getAccessToken()
   const {
     data: profile,
     isLoading,
     isError,
     error,
-  } = useGetProfile();
+  } = useGetProfile(access_token);
  useEffect(() => {
   if (profile?.avatar) {
     localStorage.setItem("user_image", profile.avatar);

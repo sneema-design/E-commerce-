@@ -5,6 +5,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { CartProvider } from "./components/CartContext";
+import AppLayout from "./layout/AppLayout";
 const queryClient = new QueryClient();
 
 
@@ -13,8 +14,10 @@ createRoot(document.getElementById("root")!).render(
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
       <CartProvider>
+      <AppLayout>
+                     <App />
 
-        <App />
+      </AppLayout>
 
       </CartProvider>
       </BrowserRouter>

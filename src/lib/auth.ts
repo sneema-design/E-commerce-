@@ -18,7 +18,10 @@ export const clearTokens = () => {
 export const isAuthenticated=():boolean=>{
       return Boolean(localStorage.getItem("access_token"))
 }
+export const getRole=()=>{
+  localStorage.getItem("role")
+}
 export const logout=():void=>{
-      localStorage.removeItem("access_token")
+      localStorage.clear()
       window.location.href = "/login";
 }

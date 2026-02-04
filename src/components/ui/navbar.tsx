@@ -14,7 +14,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/ROUTES";
-import { isAuthenticated, logout } from "@/lib/auth";
+import {  isAuthenticated, logout } from "@/lib/auth";
+const role=localStorage.getItem("role")
 /* ===================== LOGO ===================== */
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
   return (
@@ -74,6 +75,8 @@ const defaultNavigationLinks: NavbarNavLink[] = [
   { href: "/category", label: "Category" },
   { href: "/orders", label: "Orders" },
   { href: "/cart", label: "Cart" },
+  {href:"/user",label:"Users"},
+  {href:"/product",label:"Products"}
 ];
 
 /* ===================== NAVBAR ===================== */
@@ -93,7 +96,7 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
       checkWidth();
       const observer = new ResizeObserver(checkWidth);
       containerRef.current && observer.observe(containerRef.current);
-
+      
       return () => observer.disconnect();
     }, []);
      const avatar =localStorage.getItem("user_image") ||"/default-avatar.png";
@@ -179,7 +182,26 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
                       Cart
                     </Button>
                   </NavigationMenuItem>
+                  {role==="admin"?(
+                    <><NavigationMenuItem>
+                    <Button
+                      variant="ghost"
+                      onClick={() => navigate(ROUTES.USER)}
+                    >
+                      Users
+                    </Button>
+                  </NavigationMenuItem>
+                       <NavigationMenuItem>
+                    <Button
+                      variant="ghost"
+                      onClick={() => navigate(ROUTES.PRODUCTS)}
+                    >
+                      Products
+                    </Button>
+                  </NavigationMenuItem></>):null}
+                 
                 </NavigationMenuList>
+
               </NavigationMenu>
             )}
           </div>

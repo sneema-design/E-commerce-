@@ -1,5 +1,6 @@
 import CartItem from "@/components/CartItem";
 import { useCart } from "@/components/CartContext";
+import PaymentComponent from "@/components/RazorPay";
 
 export default function Cart() {
   const { items } = useCart();
@@ -24,6 +25,7 @@ export default function Cart() {
         />
       ))}
      <h1>Total Items in the cart {totalItems}</h1>
+     <PaymentComponent/>
     </div>
   );
 }

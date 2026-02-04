@@ -22,11 +22,15 @@ import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "@/lib/auth";
 import { ROUTES } from "@/constants/ROUTES";
+import { getProfile } from "@/service/user/userService";
+
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const { mutateAsync, isPending } = useLoginUser();
+
+  // const {refetch} = useGetProfile();
   const navigate = useNavigate();
   const formik = useFormik<LoginFormValues>({
     initialValues: {
@@ -38,10 +42,15 @@ export function LoginForm({
     onSubmit: async (values, { resetForm }) => {
       try {
         const res = await mutateAsync(values);
-        //
-        setToken(res.access_token, res.access_token);
-        console.log(res); // accessToken, refreshToken
-        navigate("/");
+        const { access_token, refresh_token } = res;
+
+        setToken(access_token, refresh_token);
+        const userProfile = await getProfile(access_token);
+        const role=userProfile.role;
+        localStorage.setItem("role",role)
+        console.log("userProfile", userProfile);
+        navigate(ROUTES.HOME);
+
         toast.success("Logged in successfully 🎉");
         resetForm();
       } catch (error) {
@@ -108,7 +117,15 @@ export function LoginForm({
                   Login with Google
                 </Button> */}
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#" onClick={()=>{navigate(ROUTES.SIGNUP)}}>Sign up</a>
+                  Don&apos;t have an account?{" "}
+                  <a
+                    href="#"
+                    onClick={() => {
+                      navigate(ROUTES.SIGNUP);
+                    }}
+                  >
+                    Sign up
+                  </a>
                 </FieldDescription>
               </Field>
             </FieldGroup>
