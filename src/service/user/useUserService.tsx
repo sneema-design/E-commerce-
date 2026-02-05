@@ -1,6 +1,7 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { createUser, getAllUser, getProfile, LoginUser } from "./userService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createUser, getAllUser, getProfile, LoginUser,deleteUser } from "./userService";
 import type { User, createUserData, LoginUserData, Token } from "@/types/user";
+import { toast } from "sonner";
 
 export const useCreateUser = () => {
   return useMutation<User, Error, createUserData>({
@@ -26,3 +27,17 @@ export const UsegetAllUser = () => {
     queryFn: getAllUser,
   });
 };
+
+export const UseDeleteuser=()=>{
+  const queryClient=useQueryClient();
+  return useMutation({
+    mutationFn:({id}:{id:number})=>deleteUser({id}),
+    onSuccess:()=>{
+      toast.success("Delete the User Successfully!!!")
+      queryClient.invalidateQueries({queryKey:["UserAll"]})
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  })
+}

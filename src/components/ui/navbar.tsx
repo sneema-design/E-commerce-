@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/ROUTES";
 import {  isAuthenticated, logout } from "@/lib/auth";
-const role=localStorage.getItem("role")
 /* ===================== LOGO ===================== */
 const Logo = (props: React.SVGAttributes<SVGElement>) => {
   return (
@@ -85,20 +84,24 @@ export const Navbar = React.forwardRef<HTMLElement, NavbarProps>(
     const navigate = useNavigate();
     const [isMobile, setIsMobile] = useState(false);
     const containerRef = useRef<HTMLElement>(null);
+    const [role, setRole] = useState<string | null>(null);
 
-    useEffect(() => {
-      const checkWidth = () => {
-        if (containerRef.current) {
-          setIsMobile(containerRef.current.offsetWidth < 768);
-        }
-      };
+useEffect(() => {
+  const updateRole = () => {
+    setRole(localStorage.getItem("role"));
+  };
 
-      checkWidth();
-      const observer = new ResizeObserver(checkWidth);
-      containerRef.current && observer.observe(containerRef.current);
-      
-      return () => observer.disconnect();
-    }, []);
+  updateRole(); // initial read on mount
+
+  window.addEventListener("auth-change", updateRole);
+  window.addEventListener("storage", updateRole); // cross-tab support
+
+  return () => {
+    window.removeEventListener("auth-change", updateRole);
+    window.removeEventListener("storage", updateRole);
+  };
+}, []);
+
      const avatar =localStorage.getItem("user_image") ||"/default-avatar.png";
 
     return (

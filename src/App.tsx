@@ -13,11 +13,10 @@ import ProtectRoutes, {
 import Cart from "./pages/Cart";
 import Order from "./pages/Order";
 import Profile from "./pages/Profile";
-import { useAuthBootStrap } from "./hooks/useAuthBootstrap";
 import User from "./pages/User";
 import Products from "./pages/Products";
 function App() {
-  // useAuthBootStrap()
+  
   return (
     <>
       <Navbar />
