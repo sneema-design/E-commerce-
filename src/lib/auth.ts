@@ -1,4 +1,3 @@
-
 export const setToken = (access_token: string, refresh_token: string) => {
   localStorage.setItem("access_token", access_token);
   localStorage.setItem("refresh_token", refresh_token);
@@ -15,13 +14,14 @@ export const clearTokens = () => {
   localStorage.removeItem("refresh_token");
 };
 
-export const isAuthenticated=():boolean=>{
-      return Boolean(localStorage.getItem("access_token"))
-}
-export const getRole=()=>{
-  localStorage.getItem("role")
-}
-export const logout=():void=>{
-      localStorage.clear()
-      window.location.href = "/login";
-}
+export const isAuthenticated = (): boolean => {
+  return Boolean(localStorage.getItem("access_token"));
+};
+export const getRole = () => {
+  const role = localStorage.getItem("role");
+  return role;
+};
+export const logout = (): void => {
+  localStorage.clear();
+  window.location.href = "/login";
+};

@@ -1,18 +1,33 @@
-import { useGetAllProduct } from "@/service/product/useProductService";
+import CreateProductDialog from "@/components/CreateProductDialog";
+import { Button } from "@/components/ui/button";
+import {
+  useDeleteProduct,
+  useGetAllProduct,
+} from "@/service/product/useProductService";
+import type { Product } from "@/types/product";
+import { useState } from "react";
 
 export default function Products() {
-  const { data: products=[], isPending, isError } = useGetAllProduct();
-
+  const { data: products = [], isPending, isError } = useGetAllProduct();
+  const { mutateAsync: deteteProductMutate, isPending: deletePending } =
+    useDeleteProduct();
+  const [openUpdateProduct, setOpenUpdateProduct] = useState(false);
+  const [selectedProduct, setSelectProduct] = useState<Product | null>(null);
+  const [openCreateProduct, setOpenCreateProduct] = useState(false);
   if (isPending) return <p className="p-4">Loading products...</p>;
-  if (isError) return <p className="p-4 text-red-500">Failed to load products</p>;
+  if (isError)
+    return <p className="p-4 text-red-500">Failed to load products</p>;
 
-  const handleUpdate = (product) => {
-    console.log("Update:", product);
+  const handleUpdate = (product: Product) => {
+    setSelectProduct(product);
+    setOpenUpdateProduct(true);
+
     // navigate or open modal
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this product?")) {
+      await deteteProductMutate({ id });
       console.log("Delete ID:", id);
       // call delete API
     }
@@ -20,7 +35,16 @@ export default function Products() {
 
   return (
     <div className="p-6">
-      <h1 className="text-2xl font-semibold mb-4">Products</h1>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold mb-4">Products</h1>
+        <Button onClick={() => setOpenCreateProduct(true)}>
+          Create Product
+        </Button>
+        <CreateProductDialog
+          open={openCreateProduct}
+          onOpenChange={setOpenCreateProduct}
+        />
+      </div>
 
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white">
@@ -53,9 +77,7 @@ export default function Products() {
                   {product.category.name}
                 </td>
 
-                <td className="px-6 py-4 font-semibold">
-                  ${product.price}
-                </td>
+                <td className="px-6 py-4 font-semibold">${product.price}</td>
 
                 <td className="px-6 py-4 text-center space-x-2">
                   <button
@@ -67,6 +89,7 @@ export default function Products() {
 
                   <button
                     onClick={() => handleDelete(product.id)}
+                    disabled={deletePending}
                     className="px-3 py-1 text-sm rounded bg-red-500 text-white hover:bg-red-600"
                   >
                     Delete
@@ -76,6 +99,12 @@ export default function Products() {
             ))}
           </tbody>
         </table>
+        <CreateProductDialog
+          open={openUpdateProduct}
+          onOpenChange={setOpenUpdateProduct}
+          mode="update"
+          defaultValues={selectedProduct}
+        />
       </div>
     </div>
   );

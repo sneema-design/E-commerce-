@@ -39,7 +39,6 @@ export const LoginUser = async (
 
 export const getProfile = async (access_token: string): Promise<User> => {
   try {
-
     const response: AxiosResponse<User> = await api.get("/auth/profile", {
       headers: {
         Authorization: `Bearer ${access_token}`,
@@ -58,11 +57,11 @@ export const getProfile = async (access_token: string): Promise<User> => {
   }
 };
 
-export const getAllUser=async():Promise<User[]>=>{
+export const getAllUser = async (): Promise<User[]> => {
   try {
-    const response:AxiosResponse<User[]>=await api.get("/users")
+    const response: AxiosResponse<User[]> = await api.get("/users");
     return response.data;
-  } catch (error:unknown) {
+  } catch (error: unknown) {
     if (axios.isAxiosError(error)) {
       console.error(error.response?.data);
       throw new Error(
@@ -70,14 +69,13 @@ export const getAllUser=async():Promise<User[]>=>{
       );
     }
 
-    throw new Error("Failed to Fetch Profile")
+    throw new Error("Failed to Fetch Profile");
   }
-}
+};
 
-
-export const deleteUser=async({id}:{id:number})=>{
+export const deleteUser = async ({ id }: { id: number }) => {
   try {
-    const response =await api.delete(`/users/${id}`)
+    const response = await api.delete(`/users/${id}`);
     console.log(response.data);
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -87,6 +85,27 @@ export const deleteUser=async({id}:{id:number})=>{
       );
     }
 
-    throw new Error("Failed to delete Profile")
+    throw new Error("Failed to delete Profile");
   }
-}
+};
+
+export const updateUser = async ({
+  id,
+  userData,
+}: {
+  id: number;
+  userData: createUserData;
+}) => {
+  try {
+    const response = await api.put(`/users/${id}`, userData);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || "Unable to update profile",
+      );
+    }
+    throw new Error("Failed to update profile");
+  }
+};

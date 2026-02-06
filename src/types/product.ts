@@ -26,3 +26,12 @@ export interface Category {
   limit?:number,
   offset?:number,
  }
+
+
+ export interface CreateProuct{ 
+  title: string;
+  price: number;
+  description: string;
+  categoryId: number;
+  images: string[];
+ }

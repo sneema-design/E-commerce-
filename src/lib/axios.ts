@@ -1,5 +1,10 @@
 import axios from "axios";
-import { setToken, getAccessToken, getRefreshToken, clearTokens } from "./auth";
+import {
+  setToken,
+  getAccessToken,
+  getRefreshToken,
+  logout,
+} from "./auth";
 
 export const api = axios.create({
   baseURL: "https://api.escuelajs.co/api/v1",
@@ -35,6 +40,10 @@ api.interceptors.response.use(
         });
 
         const { accessToken, refreshToken: newRefreshToken } = response.data;
+        if (!accessToken || !newRefreshToken) {
+          throw new Error("Invalid refresh token response");
+        }
+
         console.log("after running refersh token", accessToken, refreshToken);
         setToken(accessToken, newRefreshToken);
 
@@ -45,8 +54,8 @@ api.interceptors.response.use(
 
         return api(originalRequest);
       } catch (err) {
-        clearTokens();
-        window.location.href = "/login";
+        logout();
+        window.location.replace("/login");
         return Promise.reject(err);
       }
     }

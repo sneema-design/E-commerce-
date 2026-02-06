@@ -1,20 +1,20 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { UsegetAllUser,UseDeleteuser } from "@/service/user/useUserService";
+import CreateUserDialog from "@/components/CreateUserDialog";
+import { UsegetAllUser, UseDeleteuser } from "@/service/user/useUserService";
+import type { User } from "@/types/user";
 
 export default function User() {
-  const { data: users, isPending:userPending, isError } = UsegetAllUser();
-  const {mutateAsync:deletUserMutate,isPending}=UseDeleteuser()
-  const handleUpdate = (user) => {
-    console.log("Update user:", user);
-    // navigate to update page or open modal
-    // router.push(`/users/update/${user.id}`)
-  };
+  const { data: users, isPending: userPending, isError } = UsegetAllUser();
+  const { mutateAsync: deleteUserMutate, isPending: isDeleting } =UseDeleteuser();
 
-  const handleDelete = (id:number) => {
+  const [openCreateUser, setOpenCreateUser] = useState(false);
+  const [openUpdateUser, setOpenUpdateUser] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this user?")) {
-      deletUserMutate({id})
-      console.log("Delete user id:", id);
-      // call delete API here
+      await deleteUserMutate({ id });
     }
   };
 
@@ -23,20 +23,28 @@ export default function User() {
 
   return (
     <div className="p-6">
-      <div className="flex items-center justify-between mb-4">
-        <h1 className="text-2xl font-semibold mb-4">Users</h1>
-        <Button>
-          Create User
-        </Button>
+      {/* HEADER */}
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-semibold">Users</h1>
+        <Button onClick={() => setOpenCreateUser(true)}>Create User</Button>
       </div>
-      
+
+      {/* CREATE USER DIALOG */}
+      <CreateUserDialog
+        open={openCreateUser}
+        onOpenChange={setOpenCreateUser}
+        mode="create"
+      />
+
+      {/* TABLE */}
       <div className="overflow-x-auto rounded-lg shadow">
         <table className="min-w-full bg-white">
-          <thead className="bg-gray-100 text-gray-700 text-sm uppercase">
+          <thead className="bg-gray-100 text-sm uppercase text-gray-700">
             <tr>
               <th className="px-6 py-3 text-left">Avatar</th>
               <th className="px-6 py-3 text-left">Name</th>
               <th className="px-6 py-3 text-left">Email</th>
+              <th className="px-6 py-3 text-left">Role</th>
               <th className="px-6 py-3 text-center">Actions</th>
             </tr>
           </thead>
@@ -48,29 +56,29 @@ export default function User() {
                   <img
                     src={user.avatar}
                     alt={user.name}
-                    className="w-10 h-10 rounded-full object-cover"
+                    className="h-10 w-10 rounded-full object-cover"
                   />
                 </td>
 
-                <td className="px-6 py-4 font-medium text-gray-800">
-                  {user.name}
-                </td>
-
-                <td className="px-6 py-4 text-gray-600">
-                  {user.email}
-                </td>
+                <td className="px-6 py-4 font-medium">{user.name}</td>
+                <td className="px-6 py-4 text-gray-600">{user.email}</td>
+                <td className="px-6 py-4 capitalize">{user.role}</td>
 
                 <td className="px-6 py-4 text-center space-x-2">
                   <button
-                    onClick={() => handleUpdate(user)}
-                    className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
+                    className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
+                    onClick={() => {
+                      setSelectedUser(user);
+                      setOpenUpdateUser(true);
+                    }}
                   >
                     Update
                   </button>
 
                   <button
-                    onClick={() => handleDelete(user.id)} disabled={isPending}
-                    className="px-3 py-1 text-sm rounded bg-red-500 text-white hover:bg-red-600"
+                    disabled={isDeleting}
+                    className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600 disabled:opacity-50"
+                    onClick={() => handleDelete(user.id)}
                   >
                     Delete
                   </button>
@@ -80,7 +88,19 @@ export default function User() {
           </tbody>
         </table>
       </div>
+
+      {/* UPDATE USER DIALOG */}
+      {selectedUser && (
+        <CreateUserDialog
+          open={openUpdateUser}
+          onOpenChange={(open) => {
+            setOpenUpdateUser(open);
+            if (!open) setSelectedUser(null); // 🔑 cleanup
+          }}
+          mode="update"
+          defaultValues={selectedUser}
+        />
+      )}
     </div>
   );
 }
-

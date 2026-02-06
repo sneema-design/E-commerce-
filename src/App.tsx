@@ -1,5 +1,5 @@
 import "./App.css";
-import { Routes, Route } from "react-router-dom";
+import { useRoutes } from "react-router-dom";
 import { ROUTES } from "./constants/ROUTES";
 import SignUp from "./pages/SignUp";
 import Login from "./pages/Login";
@@ -15,28 +15,42 @@ import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import User from "./pages/User";
 import Products from "./pages/Products";
+import { getRole } from "./lib/auth";
+import Category from "./pages/Category";
+
 function App() {
-  
+  const element = useRoutes([
+    { path: ROUTES.HOME, element: <Home /> },
+    { path: ROUTES.LOGIN, element: <Login /> },
+    { path: ROUTES.SIGNUP, element: <SignUp /> },
+    { path: ROUTES.PRODUCT, element: <Product /> },
+
+    {
+      element: <ProtectRoutes />,
+      children: [
+        { path: ROUTES.CART, element: <Cart /> },
+        { path: ROUTES.ORDER, element: <Order /> },
+        { path: ROUTES.PROFILE, element: <Profile /> },
+      ],
+    },
+
+    {
+      element: <AdminProtectRoutes />,
+      children: [
+        { path: ROUTES.USER, element: <User /> },
+        { path: ROUTES.PRODUCTS, element: <Products /> },
+        {path :ROUTES.CATEGORY,element:<Category/>}
+      ],
+    },
+  ]);
+
+
+
   return (
     <>
       <Navbar />
-
       <Toaster richColors position="top-right" />
-      <Routes>
-        <Route path={ROUTES.HOME} element={<Home />} />
-        <Route path={ROUTES.LOGIN} element={<Login />} />
-        <Route path={ROUTES.SIGNUP} element={<SignUp />} />
-        <Route path={ROUTES.PRODUCT} element={<Product />} />
-        <Route element={<ProtectRoutes />}>
-          <Route path={ROUTES.CART} element={<Cart />} />
-          <Route path={ROUTES.ORDER} element={<Order />} />
-          <Route path={ROUTES.PROFILE} element={<Profile />} />
-        </Route>
-        <Route element={<AdminProtectRoutes />}>
-          <Route path={ROUTES.USER} element={<User />} />
-          <Route path={ROUTES.PRODUCTS} element={<Products />} />
-        </Route>
-      </Routes>
+      {element}
     </>
   );
 }
