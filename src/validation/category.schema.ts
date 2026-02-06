@@ -1,7 +1,7 @@
 import * as Yup from "yup"
 
 
-const CategorySchemaValidaion=Yup.object({
+export const CategorySchemaValidaion=Yup.object({
     name:Yup.string().required("name is required"),
     image:Yup.string().required("imavgae")
     
