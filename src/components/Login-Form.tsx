@@ -7,13 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { FieldGroup } from "@/components/ui/field";
 import { useFormik } from "formik";
 import { loginFormValidationSchema } from "@/validation/login.schema";
 import type { LoginFormValues } from "@/types/login";
@@ -23,15 +17,15 @@ import { useNavigate } from "react-router-dom";
 import { setToken } from "@/lib/auth";
 import { ROUTES } from "@/constants/ROUTES";
 import { getProfile } from "@/service/user/userService";
+import { FormInput } from "@/components/ui/formInput";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const { mutateAsync, isPending } = useLoginUser();
-
-  // const {refetch} = useGetProfile();
   const navigate = useNavigate();
+
   const formik = useFormik<LoginFormValues>({
     initialValues: {
       email: "",
@@ -45,16 +39,17 @@ export function LoginForm({
         const { access_token, refresh_token } = res;
 
         setToken(access_token, refresh_token);
+
         const userProfile = await getProfile(access_token);
-        const role=userProfile.role;
-        localStorage.setItem("role",role)
-        console.log("userProfile", userProfile);
-        navigate(ROUTES.HOME);
+        localStorage.setItem("role", userProfile.role);
 
         toast.success("Logged in successfully 🎉");
+        navigate(ROUTES.HOME);
         resetForm();
       } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Login failed");
+        toast.error(
+          error instanceof Error ? error.message : "Login failed"
+        );
       }
     },
   });
@@ -68,66 +63,58 @@ export function LoginForm({
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
+
         <CardContent>
           <form onSubmit={formik.handleSubmit}>
             <FieldGroup>
-              <Field>
-                <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="m@example.com"
-                  value={formik.values.email}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.email && formik.errors.email && (
-                  <p className="text-sm text-red-500">{formik.errors.email}</p>
-                )}
-              </Field>
-              <Field>
-                <div className="flex items-center">
-                  <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a
-                    href="#"
-                    className="ml-auto inline-block text-sm underline-offset-4 hover:underline"
+              <FormInput
+                id="email"
+                label="Email"
+                type="email"
+                placeholder="m@example.com"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                touched={formik.touched.email}
+                error={formik.errors.email}
+              />
+
+              <FormInput
+                id="password"
+                label="Password"
+                type="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                touched={formik.touched.password}
+                error={formik.errors.password}
+                rightElement={
+                  <button
+                    type="button"
+                    className="text-sm underline-offset-4 hover:underline"
                   >
                     Forgot your password?
-                  </a>
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formik.values.password}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-                {formik.touched.password && formik.errors.password && (
-                  <p className="text-sm text-red-500">
-                    {formik.errors.password}
-                  </p>
-                )}
-              </Field>
-              <Field>
-                <Button type="submit" disabled={!formik.isValid || isPending}>
-                  {isPending ? "Log In..." : "Login"}
-                </Button>
-                {/* <Button variant="outline" type="button">
-                  Login with Google
-                </Button> */}
-                <FieldDescription className="text-center">
-                  Don&apos;t have an account?{" "}
-                  <a
-                    href="#"
-                    onClick={() => {
-                      navigate(ROUTES.SIGNUP);
-                    }}
-                  >
-                    Sign up
-                  </a>
-                </FieldDescription>
-              </Field>
+                  </button>
+                }
+              />
+
+              <Button
+                type="submit"
+                disabled={!formik.isValid || isPending}
+              >
+                {isPending ? "Log In..." : "Login"}
+              </Button>
+
+              <p className="text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <button
+                  type="button"
+                  className="underline"
+                  onClick={() => navigate(ROUTES.SIGNUP)}
+                >
+                  Sign up
+                </button>
+              </p>
             </FieldGroup>
           </form>
         </CardContent>

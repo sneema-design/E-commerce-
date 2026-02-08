@@ -8,11 +8,16 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
+
 import type { CreateUserForm } from "@/types/signup";
 import { signupValidationSchema } from "@/validation/signup.schema";
 import { updateValidationSchema } from "@/validation/update.schema";
-import { useCreateUser, UseUpdateUser } from "@/service/user/useUserService";
+import {
+  useCreateUser,
+  UseUpdateUser,
+} from "@/service/user/useUserService";
 import type { User } from "@/types/user";
+import { FormInput } from "@/components/ui/formInput";
 
 type Props = {
   open: boolean;
@@ -21,11 +26,17 @@ type Props = {
   defaultValues?: User | null;
 };
 
+
 const cleanUserData = (values: CreateUserForm) => {
-  const data = { ...values };
-  if (!data.password) delete data.password;
-  return data;
+  const { password, ...rest } = values;
+
+  if (password) {
+    return values;
+  }
+
+  return rest;
 };
+
 
 export default function CreateUserDialog({
   open,
@@ -33,13 +44,20 @@ export default function CreateUserDialog({
   mode = "create",
   defaultValues,
 }: Props) {
-  const { mutateAsync: createUser, isPending: creating } = useCreateUser();
-  const { mutateAsync: updateUser, isPending: updating } = UseUpdateUser();
+  const { mutateAsync: createUser, isPending: creating } =
+    useCreateUser();
+  const { mutateAsync: updateUser, isPending: updating } =
+    UseUpdateUser();
 
   const isUpdate = mode === "update";
 
   const formik = useFormik<CreateUserForm>({
     enableReinitialize: true,
+    validationSchema: isUpdate
+      ? updateValidationSchema
+      : signupValidationSchema,
+    validateOnChange: true,
+    validateOnBlur: true,
 
     initialValues: {
       name: defaultValues?.name || "",
@@ -49,16 +67,10 @@ export default function CreateUserDialog({
       avatar: defaultValues?.avatar || "",
     },
 
-    validationSchema: isUpdate
-      ? updateValidationSchema
-      : signupValidationSchema,
-    validateOnChange: true,
-    validateOnBlur: true,
     onSubmit: async (values, { resetForm }) => {
       try {
         if (isUpdate && defaultValues?.id) {
           const payload = cleanUserData(values);
-
           await updateUser({
             id: defaultValues.id,
             userData: payload,
@@ -79,7 +91,9 @@ export default function CreateUserDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{isUpdate ? "Update User" : "Create User"}</DialogTitle>
+          <DialogTitle>
+            {isUpdate ? "Update User" : "Create User"}
+          </DialogTitle>
           <DialogDescription>
             {isUpdate
               ? "Update user details below."
@@ -88,79 +102,98 @@ export default function CreateUserDialog({
         </DialogHeader>
 
         <form onSubmit={formik.handleSubmit} className="space-y-4">
-          {/* NAME */}
-          <input
-            name="name"
-            placeholder="Name"
+          <FormInput
+            id="name"
+            label="Name"
+            placeholder="John Doe"
             value={formik.values.name}
             onChange={formik.handleChange}
-            className="w-full rounded border px-3 py-2"
+            onBlur={formik.handleBlur}
+            touched={formik.touched.name}
+            error={formik.errors.name}
           />
-          {formik.touched.name && formik.errors.name && (
-            <p className="text-sm text-red-500">{formik.errors.name}</p>
-          )}
-          {/* EMAIL (disabled on update) */}
-          <input
-            name="email"
+
+          <FormInput
+            id="email"
+            label="Email"
             type="email"
-            placeholder="Email"
+            placeholder="m@example.com"
             value={formik.values.email}
             onChange={formik.handleChange}
-            disabled={isUpdate}
-            className="w-full rounded border px-3 py-2 disabled:bg-gray-100"
+            onBlur={formik.handleBlur}
+            touched={formik.touched.email}
+            error={formik.errors.email}
+            rightElement={
+              isUpdate ? (
+                <span className="text-xs text-gray-400">
+                  Email cannot be changed
+                </span>
+              ) : null
+            }
           />
-          {formik.touched.email && formik.errors.email && (
-            <p className="text-sm text-red-500">{formik.errors.email}</p>
-          )}
-          {/* PASSWORD (create only) */}
+
           {!isUpdate && (
-            <input
-              name="password"
+            <FormInput
+              id="password"
+              label="Password"
               type="password"
-              placeholder="Password"
               value={formik.values.password}
               onChange={formik.handleChange}
-              className="w-full rounded border px-3 py-2"
+              onBlur={formik.handleBlur}
+              touched={
+                formik.touched.password || formik.submitCount > 0
+              }
+              error={formik.errors.password}
             />
           )}
-          {(formik.touched.password || formik.submitCount > 0) &&
-            formik.errors.password && (
-              <p className="text-sm text-red-500">{formik.errors.password}</p>
+
+          {/* ROLE (select – special case) */}
+          <div>
+            <label className="mb-1 block text-sm font-medium">
+              Role
+            </label>
+            <select
+              name="role"
+              value={formik.values.role}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              className="w-full rounded-md border px-3 py-2 text-sm"
+            >
+              <option value="">Select role</option>
+              <option value="admin">Admin</option>
+              <option value="customer">Customer</option>
+            </select>
+            {formik.touched.role && formik.errors.role && (
+              <p className="mt-1 text-xs text-red-500">
+                {formik.errors.role}
+              </p>
             )}
-          {/* ROLE */}
-          <select
-            name="role"
-            value={formik.values.role}
-            onChange={formik.handleChange}
-            className="w-full rounded border bg-white px-3 py-2"
-          >
-            <option value="">Select role</option>
-            <option value="admin">Admin</option>
-            <option value="customer">Customer</option>
-          </select>
-          {formik.touched.role && formik.errors.role && (
-            <p className="text-sm text-red-500">{formik.errors.role}</p>
-          )}
-          {/* AVATAR */}
-          <input
-            name="avatar"
-            placeholder="Avatar URL"
+          </div>
+
+          <FormInput
+            id="avatar"
+            label="Avatar URL"
+            placeholder="https://avatar.com/me.png"
             value={formik.values.avatar}
             onChange={formik.handleChange}
-            className="w-full rounded border px-3 py-2"
+            onBlur={formik.handleBlur}
+            touched={formik.touched.avatar}
+            error={formik.errors.avatar}
           />
-          {formik.touched.avatar && formik.errors.avatar && (
-            <p className="text-sm text-red-500">{formik.errors.avatar}</p>
-          )}
+
           <DialogFooter>
-            <Button type="submit" disabled={creating || updating}>
+            <Button
+              type="submit"
+              disabled={creating || updating}
+              className="w-full"
+            >
               {updating
                 ? "Updating..."
                 : creating
-                  ? "Creating..."
-                  : isUpdate
-                    ? "Update User"
-                    : "Create User"}
+                ? "Creating..."
+                : isUpdate
+                ? "Update User"
+                : "Create User"}
             </Button>
           </DialogFooter>
         </form>

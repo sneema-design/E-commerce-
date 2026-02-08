@@ -15,8 +15,9 @@ import {
   UseUpdateCategory,
 } from "@/service/category/useCategoryService";
 
-import type { CategoryFormValue, category as Category } from "@/types/category";
+import type { CategoryFormValue, Category } from "@/types/category";
 import { CategorySchemaValidaion } from "@/validation/category.schema";
+import { FormInput } from "@/components/ui/formInput";
 
 type Props = {
   open: boolean;
@@ -41,6 +42,7 @@ export default function CreateCategoryDialog({
   const formik = useFormik<CategoryFormValue>({
     enableReinitialize: true,
     validationSchema: CategorySchemaValidaion,
+    validateOnChange: true,
 
     initialValues: {
       name: defaultValues?.name || "",
@@ -70,11 +72,6 @@ export default function CreateCategoryDialog({
     },
   });
 
-  const inputClass =
-    "w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/20";
-  const labelClass = "mb-1 block text-sm font-medium text-gray-700";
-  const errorClass = "mt-1 text-xs text-red-500";
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
@@ -89,58 +86,42 @@ export default function CreateCategoryDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={formik.handleSubmit} className="space-y-5">
-          {/* NAME */}
-          <div>
-            <label className={labelClass}>Name</label>
-            <input
-              name="name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className={`${inputClass} ${
-                formik.touched.name && formik.errors.name
-                  ? "border-red-500 focus:ring-red-500/20"
-                  : ""
-              }`}
-            />
-            {formik.touched.name && formik.errors.name && (
-              <p className={errorClass}>{formik.errors.name}</p>
-            )}
-          </div>
+        <form onSubmit={formik.handleSubmit} className="space-y-4">
+          <FormInput
+            id="name"
+            label="Name"
+            placeholder="Category name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            touched={formik.touched.name}
+            error={formik.errors.name}
+          />
 
-          {/* IMAGE */}
-          <div>
-            <label className={labelClass}>Image URL</label>
-            <input
-              name="image"
-              value={formik.values.image}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              className={`${inputClass} ${
-                formik.touched.image && formik.errors.image
-                  ? "border-red-500 focus:ring-red-500/20"
-                  : ""
-              }`}
-            />
-            {formik.touched.image && formik.errors.image && (
-              <p className={errorClass}>{formik.errors.image}</p>
-            )}
-          </div>
+          <FormInput
+            id="image"
+            label="Image URL"
+            placeholder="https://image-url.com"
+            value={formik.values.image}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            touched={formik.touched.image}
+            error={formik.errors.image}
+          />
 
           <DialogFooter>
             <Button
               type="submit"
-              disabled={!formik.isValid || creating || updating}
               className="w-full"
+              disabled={!formik.isValid || creating || updating}
             >
               {updating
                 ? "Updating..."
                 : creating
-                  ? "Creating..."
-                  : isUpdate
-                    ? "Update Category"
-                    : "Create Category"}
+                ? "Creating..."
+                : isUpdate
+                ? "Update Category"
+                : "Create Category"}
             </Button>
           </DialogFooter>
         </form>
