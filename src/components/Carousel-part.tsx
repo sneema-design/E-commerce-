@@ -12,7 +12,7 @@ export default function CarouselPart() {
       <CarouselContent>
         <CarouselItem>
           <img
-            src="alexander-andrews-OfvV-jkgrfQ-unsplash.jpg"
+            src="5de1b654-f78f-46eb-9624-e06e0420410f.png"
             alt="Sample 1"
             className="w-full h-80 object-cover rounded-lg"
           />
