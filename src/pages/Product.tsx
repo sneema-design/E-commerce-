@@ -7,12 +7,13 @@ import {
 } from "@/components/ui/carousel";
 import { useGetProductById } from "@/service/product/useProductService";
 import { useParams } from "react-router-dom";
-
+import { useCart } from "@/components/CartContext";
+import { toast } from "sonner";
 export default function Product() {
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
 
-  
+  const {addToCart}=useCart()
   const { data: product, isLoading, isError, error } = useGetProductById({
     id: productId,
   
@@ -97,10 +98,13 @@ export default function Product() {
           </p>
 
           <div className="mt-6 flex gap-4">
-            <button className="px-6 py-2 bg-primary text-white rounded-md hover:opacity-90">
+            <button onClick={()=>toast.info("Feature Comming Soon")}className="px-6 py-2 bg-primary text-white rounded-md hover:opacity-90">
               Buy Now
             </button>
-            <button className="px-6 py-2 border border-primary text-primary rounded-md hover:bg-primary/10">
+            <button  onClick={(e) => {
+              e.stopPropagation();
+              addToCart(product.id);
+            }}className="px-6 py-2 border border-primary text-primary rounded-md hover:bg-primary/10">
               Add to Cart
             </button>
           </div>

@@ -8,7 +8,10 @@ import {
   TableCaption,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { UseDeleteCategory, UseGetAllCategories } from "@/service/category/useCategoryService";
+import {
+  UseDeleteCategory,
+  UseGetAllCategories,
+} from "@/service/category/useCategoryService";
 import type { Category } from "@/types/category";
 
 type Props = {
@@ -16,8 +19,7 @@ type Props = {
 };
 
 export default function CategoryTable({ onUpdate }: Props) {
-  const { data: categories = [], isPending, isError } =
-    UseGetAllCategories();
+  const { data: categories = [], isPending, isError } = UseGetAllCategories();
 
   const { mutateAsync: deleteCategory } = UseDeleteCategory();
 
@@ -62,6 +64,7 @@ export default function CategoryTable({ onUpdate }: Props) {
                   size="sm"
                   variant="outline"
                   onClick={() => onUpdate(cat)}
+                  className="border-blue-500 bg-blue-500 text-white hover:bg-blue-600 hover:text-white"
                 >
                   Update
                 </Button>
@@ -70,6 +73,7 @@ export default function CategoryTable({ onUpdate }: Props) {
                   size="sm"
                   variant="outline"
                   onClick={() => handleDelete(cat.id)}
+                  className="border-red-500 bg-red-500 text-white hover:bg-red-600 hover:text-white"
                 >
                   Delete
                 </Button>
