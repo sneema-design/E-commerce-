@@ -32,7 +32,7 @@ const PaymentComponent = () => {
 
   return (
     <div>
-      <h1>Payment Page</h1>
+      
       {isLoading && <p>Loading Razorpay...</p>}
       {error && <p>Error loading Razorpay: {error}</p>}
       <Button onClick={handlePayment} disabled={isLoading}>
