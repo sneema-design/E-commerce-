@@ -17,7 +17,11 @@ export const ImageCard = ({ product, onClick }: props) => {
   const { addToCart } = useCart();
 
   return (
-    <Card className="bg-card/90 backdrop-blur-sm border border-border shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-3xl" onClick={onClick}>
+    <Card
+      className="bg-card/90 backdrop-blur-sm border border-border shadow-[0_8px_24px_rgba(0,0,0,0.06)] rounded-3xl hover:border-black hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)]
+hover:-translate-y-0.5"
+      onClick={onClick}
+    >
       <CardHeader>
         <CardTitle>{product.title}</CardTitle>
         <CardDescription className="line-clamp-1">
@@ -34,9 +38,7 @@ export const ImageCard = ({ product, onClick }: props) => {
       </CardContent>
 
       <CardFooter className="flex items-center justify-between">
-        <p className="font-bold text-2xl">
-          ${product.price.toLocaleString()}
-        </p>
+        <p className="font-bold text-2xl">${product.price.toLocaleString()}</p>
 
         <div className="flex gap-4">
           <Button
