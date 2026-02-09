@@ -3,18 +3,20 @@ import { useGetProfile } from "@/service/user/useUserService";
 import { useEffect } from "react";
 
 export default function Profile() {
-  const access_token=getAccessToken()
+  const access_token = getAccessToken() ?? undefined;
+
   const {
     data: profile,
     isLoading,
     isError,
     error,
   } = useGetProfile(access_token);
- useEffect(() => {
-  if (profile?.avatar) {
-    localStorage.setItem("user_image", profile.avatar);
-  }
-}, [profile?.avatar]);
+
+  useEffect(() => {
+    if (profile?.avatar) {
+      localStorage.setItem("user_image", profile.avatar);
+    }
+  }, [profile?.avatar]);
 
   if (isLoading) {
     return (
@@ -31,17 +33,14 @@ export default function Profile() {
       </p>
     );
   }
-    
+
   if (!profile) return null;
 
   return (
     <div className="flex justify-center px-4 mt-16">
       <div className="relative w-full max-w-md overflow-hidden rounded-2xl border bg-background shadow-md">
-        
-        {/* Header */}
         <div className="h-24 bg-gradient-to-r from-indigo-500 to-purple-500" />
 
-        {/* Avatar */}
         <div className="relative -mt-16 flex justify-center">
           <img
             src={profile.avatar}
@@ -54,7 +53,6 @@ export default function Profile() {
           />
         </div>
 
-        {/* Content */}
         <div className="px-6 pb-6 pt-4 text-center space-y-3">
           <h1 className="text-2xl font-semibold tracking-tight">
             {profile.name}
@@ -67,10 +65,6 @@ export default function Profile() {
           <span className="inline-block rounded-full bg-muted px-4 py-1 text-sm font-medium">
             {profile.role}
           </span>
-
-          <p className="pt-4 text-sm text-muted-foreground italic">
-            “Keep building. Your journey is just getting started.”
-          </p>
         </div>
       </div>
     </div>

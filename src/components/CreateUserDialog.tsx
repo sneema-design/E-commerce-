@@ -10,13 +10,16 @@ import { Button } from "@/components/ui/button";
 import { useFormik } from "formik";
 
 import type { CreateUserForm } from "@/types/signup";
+import type { User, CreateUserDTO } from "@/types/user";
+
 import { signupValidationSchema } from "@/validation/signup.schema";
 import { updateValidationSchema } from "@/validation/update.schema";
+
 import {
   useCreateUser,
   UseUpdateUser,
 } from "@/service/user/useUserService";
-import type { User } from "@/types/user";
+
 import { FormInput } from "@/components/ui/formInput";
 
 type Props = {
@@ -29,14 +32,8 @@ type Props = {
 
 const cleanUserData = (values: CreateUserForm) => {
   const { password, ...rest } = values;
-
-  if (password) {
-    return values;
-  }
-
-  return rest;
+  return password ? values : rest;
 };
-
 
 export default function CreateUserDialog({
   open,
@@ -70,13 +67,24 @@ export default function CreateUserDialog({
     onSubmit: async (values, { resetForm }) => {
       try {
         if (isUpdate && defaultValues?.id) {
+          // UPDATE USER (password optional)
           const payload = cleanUserData(values);
+
           await updateUser({
             id: defaultValues.id,
             userData: payload,
           });
         } else {
-          await createUser(values);
+          // CREATE USER (password REQUIRED)
+          const payload: CreateUserDTO = {
+            name: values.name,
+            email: values.email,
+            role: values.role,
+            password: values.password,
+            avatar:values.avatar,
+          };
+
+          await createUser(payload);
         }
 
         resetForm();
@@ -147,7 +155,7 @@ export default function CreateUserDialog({
             />
           )}
 
-          {/* ROLE (select – special case) */}
+          {/* ROLE */}
           <div>
             <label className="mb-1 block text-sm font-medium">
               Role
@@ -163,6 +171,7 @@ export default function CreateUserDialog({
               <option value="admin">Admin</option>
               <option value="customer">Customer</option>
             </select>
+
             {formik.touched.role && formik.errors.role && (
               <p className="mt-1 text-xs text-red-500">
                 {formik.errors.role}

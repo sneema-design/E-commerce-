@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { useCreateUser } from "@/service/user/useUserService";
+import { useCreateUserSignUp } from "@/service/user/useUserService";
 import {
   Card,
   CardContent,
@@ -20,7 +20,7 @@ export function SignupForm({
   ...props
 }: React.ComponentProps<typeof Card>) {
   const navigate = useNavigate();
-  const { mutateAsync, isPending } = useCreateUser();
+  const { mutateAsync, isPending } = useCreateUserSignUp();
 
   const formik = useFormik<SignupFormValues>({
     initialValues: {

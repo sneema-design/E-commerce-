@@ -1,8 +1,8 @@
 import axios from "axios";
 import type { AxiosResponse } from "axios";
 import { api } from "@/lib/axios";
-import type { createUserData, LoginUserData, Token, User } from "@/types/user";
-export const createUser = async (userData: createUserData): Promise<User> => {
+import type { createUserData, CreateUserDTO, LoginUserData, Token, UpdateUserDTO, User } from "@/types/user";
+export const createUser = async (userData: CreateUserDTO): Promise<User> => {
   try {
     const response: AxiosResponse<User> = await api.post("/users", userData);
     return response.data;
@@ -15,6 +15,20 @@ export const createUser = async (userData: createUserData): Promise<User> => {
     throw new Error("Failed to create user");
   }
 };
+export const createUserSignup = async (userData: createUserData): Promise<User> => {
+  try {
+    const response: AxiosResponse<User> = await api.post("/users", userData);
+    return response.data;
+  } catch (error: unknown) {
+    if (axios.isAxiosError(error)) {
+      console.error(error.response?.data);
+      throw new Error(error.response?.data?.message || "Failed to create user");
+    }
+
+    throw new Error("Failed to create user");
+  }
+};
+
 
 export const LoginUser = async (
   UserLoginData: LoginUserData,
@@ -94,7 +108,7 @@ export const updateUser = async ({
   userData,
 }: {
   id: number;
-  userData: createUserData;
+  userData: UpdateUserDTO;
 }) => {
   try {
     const response = await api.put(`/users/${id}`, userData);

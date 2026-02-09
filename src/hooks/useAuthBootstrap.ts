@@ -5,9 +5,7 @@ import { getAccessToken } from "@/lib/auth";
 export function useAuthBootstrap() {
   const token = getAccessToken();
 
-  const { refetch } = useGetProfile({
-    enabled: false, 
-  });
+  const { refetch } = useGetProfile();
 
   useEffect(() => {
     if (!token) return;
