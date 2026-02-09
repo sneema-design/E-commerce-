@@ -13,7 +13,6 @@ import {
   UseGetAllCategories,
 } from "@/service/category/useCategoryService";
 import type { Category } from "@/types/category";
-import { SplinePointer } from "lucide-react";
 import { Spinner } from "./ui/spinner";
 
 type Props = {
