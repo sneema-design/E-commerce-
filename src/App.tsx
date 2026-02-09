@@ -15,7 +15,6 @@ import Order from "./pages/Order";
 import Profile from "./pages/Profile";
 import User from "./pages/User";
 import Products from "./pages/Products";
-import { getRole } from "./lib/auth";
 import Category from "./pages/Category";
 
 function App() {

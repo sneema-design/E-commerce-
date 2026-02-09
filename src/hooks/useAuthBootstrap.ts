@@ -2,10 +2,12 @@ import { useEffect } from "react";
 import { useGetProfile } from "@/service/user/useUserService";
 import { getAccessToken } from "@/lib/auth";
 
-export function useAuthBootStrap() {
+export function useAuthBootstrap() {
   const token = getAccessToken();
 
-  const { refetch } = useGetProfile();
+  const { refetch } = useGetProfile({
+    enabled: false, 
+  });
 
   useEffect(() => {
     if (!token) return;
