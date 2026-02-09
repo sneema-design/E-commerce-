@@ -11,14 +11,11 @@ import { FieldGroup, FieldDescription } from "@/components/ui/field";
 import { useFormik } from "formik";
 import type { SignupFormValues } from "@/types/signup";
 import { signupValidationSchema } from "@/validation/signup.schema";
-import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "@/constants/ROUTES";
 import { FormInput } from "@/components/ui/formInput";
 
-export function SignupForm({
-  ...props
-}: React.ComponentProps<typeof Card>) {
+export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const navigate = useNavigate();
   const { mutateAsync, isPending } = useCreateUserSignUp();
 
@@ -28,15 +25,17 @@ export function SignupForm({
       email: "",
       password: "",
       avatar: "",
+      confirmPassword: "",
     },
     validationSchema: signupValidationSchema,
     validateOnChange: true,
     onSubmit: async (values, { resetForm }) => {
+      const { ...payload } = values;
       try {
-        const res = await mutateAsync(values);
+        delete payload.confirmPassword
+        const res = await mutateAsync(payload);
         console.log(res.email, res.name, res.role);
 
-        toast.success("Account created successfully, Please Login!!");
         navigate(ROUTES.LOGIN);
         resetForm();
       } catch (err) {
@@ -90,6 +89,16 @@ export function SignupForm({
               touched={formik.touched.password}
               error={formik.errors.password}
             />
+            <FormInput
+              id="confirmPassword"
+              label="Confirm Password"
+              type="password"
+              value={formik.values.confirmPassword||''}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              touched={formik.touched.confirmPassword}
+              error={formik.errors.confirmPassword}
+            />
 
             <FormInput
               id="avatar"
@@ -102,10 +111,7 @@ export function SignupForm({
               error={formik.errors.avatar}
             />
 
-            <Button
-              type="submit"
-              disabled={!formik.isValid || isPending}
-            >
+            <Button type="submit" disabled={!formik.isValid || isPending}>
               {isPending ? "Creating account..." : "Create Account"}
             </Button>
 

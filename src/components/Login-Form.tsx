@@ -18,14 +18,15 @@ import { setToken } from "@/lib/auth";
 import { ROUTES } from "@/constants/ROUTES";
 import { getProfile } from "@/service/user/userService";
 import { FormInput } from "@/components/ui/formInput";
-
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const { mutateAsync, isPending } = useLoginUser();
   const navigate = useNavigate();
-
+ const [showPassword, setShowPassword] = useState(false);
   const formik = useFormik<LoginFormValues>({
     initialValues: {
       email: "",
@@ -47,9 +48,7 @@ export function LoginForm({
         navigate(ROUTES.HOME);
         resetForm();
       } catch (error) {
-        toast.error(
-          error instanceof Error ? error.message : "Login failed"
-        );
+        toast.error(error instanceof Error ? error.message : "Login failed");
       }
     },
   });
@@ -82,26 +81,28 @@ export function LoginForm({
               <FormInput
                 id="password"
                 label="Password"
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 touched={formik.touched.password}
                 error={formik.errors.password}
                 rightElement={
+                  
                   <button
                     type="button"
-                    className="text-sm underline-offset-4 hover:underline"
+                    onClick={() => setShowPassword((v) => !v)}
+                    className="text-gray-400 hover:text-gray-600"
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
-                    Forgot your password?
+                     {showPassword ? <FaEyeSlash /> : <FaEye />}
                   </button>
                 }
               />
 
-              <Button
-                type="submit"
-                disabled={!formik.isValid || isPending}
-              >
+              <Button type="submit" disabled={!formik.isValid || isPending}>
                 {isPending ? "Log In..." : "Login"}
               </Button>
 
