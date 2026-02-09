@@ -12,13 +12,13 @@ export default function Product() {
   const { id } = useParams<{ id: string }>();
   const productId = Number(id);
 
-  // Hook is always called
+  
   const { data: product, isLoading, isError, error } = useGetProductById({
     id: productId,
-    // enabled: !isNaN(productId),
+  
   });
 
-  // Early return for invalid ID
+  
   if (isNaN(productId)) {
     return (
       <p className="text-center mt-10 text-red-500">

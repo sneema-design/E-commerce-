@@ -18,6 +18,9 @@ export interface Category {
   creationAt: string;
   updatedAt: string;
 }
+export interface CategoryDTO {
+  name: string;
+}
  export interface ProductFilter{
   title?: string,
   categoryId?: number,

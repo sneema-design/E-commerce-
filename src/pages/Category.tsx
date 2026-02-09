@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import type { Category } from "@/types/product";
+import type { Category } from "@/types/category";
 import CreateCategoryDialog from "@/components/CreateCategoryDialog";
 import CategoryTable from "@/components/CategoryTable";
 

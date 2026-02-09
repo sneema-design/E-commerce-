@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { UseDeleteCategory, UseGetAllCategories } from "@/service/category/useCategoryService";
-import type { Category } from "@/types/product";
+import type { Category } from "@/types/category";
 
 type Props = {
   onUpdate: (category: Category) => void;
