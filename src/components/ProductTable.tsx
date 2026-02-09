@@ -3,6 +3,7 @@ import {
   useGetAllProduct,
 } from "@/service/product/useProductService";
 import type { Product } from "@/types/product";
+import { Button } from "./ui/button";
 
 type Props = {
   onUpdate: (product: Product) => void;
@@ -60,20 +61,20 @@ export default function ProductTable({ onUpdate }: Props) {
               </td>
 
               <td className="px-6 py-4 text-center space-x-2">
-                <button
+                <Button
                   onClick={() => onUpdate(product)}
                   className="px-3 py-1 text-sm rounded bg-blue-500 text-white hover:bg-blue-600"
                 >
                   Update
-                </button>
+                </Button>
 
-                <button
+                <Button
                   onClick={() => handleDelete(product.id)}
                   disabled={deletePending}
                   className="px-3 py-1 text-sm rounded bg-red-500 text-white hover:bg-red-600 disabled:opacity-50"
                 >
                   Delete
-                </button>
+                </Button>
               </td>
             </tr>
           ))}

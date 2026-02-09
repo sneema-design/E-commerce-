@@ -1,5 +1,6 @@
 import { UsegetAllUser, UseDeleteuser } from "@/service/user/useUserService";
 import type { User } from "@/types/user";
+import { Button } from "./ui/button";
 
 type Props = {
   onUpdate: (user: User) => void;
@@ -49,20 +50,20 @@ export default function UserTable({ onUpdate }: Props) {
               <td className="px-6 py-4 capitalize">{user.role}</td>
 
               <td className="px-6 py-4 text-center space-x-2">
-                <button
+                <Button
                   className="rounded bg-blue-500 px-3 py-1 text-sm text-white hover:bg-blue-600"
                   onClick={() => onUpdate(user)}
                 >
                   Update
-                </button>
+                </Button>
 
-                <button
+                <Button
                   disabled={isDeleting}
                   className="rounded bg-red-500 px-3 py-1 text-sm text-white hover:bg-red-600 disabled:opacity-50"
                   onClick={() => handleDelete(user.id)}
                 >
                   Delete
-                </button>
+                </Button>
               </td>
             </tr>
           ))}

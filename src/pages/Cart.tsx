@@ -1,6 +1,5 @@
 import CartItem from "@/components/CartItem";
 import { useCart } from "@/components/CartContext";
-import PaymentComponent from "@/components/RazorPay";
 import { ShoppingCart } from "lucide-react";
 
 export default function Cart() {
