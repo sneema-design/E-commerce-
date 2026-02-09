@@ -55,6 +55,9 @@ export const useCreateUserSignUp = () => {
 export const useLoginUser = () => {
   return useMutation<Token, Error, LoginUserData>({
     mutationFn: (logData) => LoginUser(logData),
+    onError:(error)=>{
+      toast.error(error.message)
+    }
   });
 };
 export const useGetProfile = (accessToken?: string) => {
