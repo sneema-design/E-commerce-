@@ -13,6 +13,8 @@ import {
   UseGetAllCategories,
 } from "@/service/category/useCategoryService";
 import type { Category } from "@/types/category";
+import { SplinePointer } from "lucide-react";
+import { Spinner } from "./ui/spinner";
 
 type Props = {
   onUpdate: (category: Category) => void;
@@ -27,9 +29,19 @@ export default function CategoryTable({ onUpdate }: Props) {
     await deleteCategory({ id });
   };
 
-  if (isPending) return <p>Loading categories...</p>;
-  if (isError) return <p>Failed to load categories</p>;
+ if (isPending)
+  return (
+    <p className="flex items-center justify-center">
+      <Spinner/>
+    </p>
+  );
 
+if (isError)
+  return (
+    <p className="text-center text-red-500">
+      Failed to load categories
+    </p>
+  );
   return (
     <Table>
       <TableCaption>List of all categories</TableCaption>

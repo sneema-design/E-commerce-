@@ -2,6 +2,7 @@ import { useGetProductById } from "@/service/product/useProductService";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useCart } from "./CartContext";
+import { Spinner } from "./ui/spinner";
 export default function CartItem({
   productId,
   quantity,
@@ -9,15 +10,22 @@ export default function CartItem({
   productId: number;
   quantity: number;
 }) {
-  const { data: product, isLoading, isError } = useGetProductById({
+  const {
+    data: product,
+    isPending,
+    isError,
+  } = useGetProductById({
     id: productId,
   });
 
   const { addToCart, decreaseQuantity, removeFromCart } = useCart();
 
-  if (isLoading) {
-    return <p className="text-muted-foreground">Loading item...</p>;
-  }
+  if (isPending)
+    return (
+      <p className="flex items-center justify-center">
+        <Spinner />
+      </p>
+    );
 
   if (isError) {
     return <p className="text-red-500">Error while fetching product</p>;

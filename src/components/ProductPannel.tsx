@@ -3,6 +3,7 @@ import { ImageCard } from "./Image-Card";
 import { useNavigate } from "react-router-dom";
 import type { ProductFilter } from "@/types/product";
 import ProductPagination from "./ProductPagination";
+import { Spinner } from "./ui/spinner";
 
 interface Props {
   filters: ProductFilter; // includes limit & offset
@@ -19,9 +20,14 @@ export default function ProductPannel({
 }: Props) {
   const navigate = useNavigate();
 
-  const { data: products = [], isLoading, isError, error } = useGetAllProduct(filters);
+  const { data: products = [], isPending, isError, error } = useGetAllProduct(filters);
 
-  if (isLoading) return <p className="text-center mt-10">Loading products...</p>;
+  if (isPending)
+  return (
+    <p className="flex items-center justify-center">
+      <Spinner/>
+    </p>
+  );
   if (isError) return <p className="text-center mt-10 text-red-500">{error.message}</p>;
 
   const hasNextPage = products.length === pageSize;

@@ -4,6 +4,7 @@ import {
 } from "@/service/product/useProductService";
 import type { Product } from "@/types/product";
 import { Button } from "./ui/button";
+import { Spinner } from "./ui/spinner";
 
 type Props = {
   onUpdate: (product: Product) => void;
@@ -19,8 +20,12 @@ export default function ProductTable({ onUpdate }: Props) {
       await deleteProduct({ id });
     }
   };
-
-  if (isPending) return <p className="p-4">Loading products...</p>;
+     if (isPending)
+  return (
+    <p className="flex items-center justify-center">
+      <Spinner/>
+    </p>
+  );
   if (isError)
     return <p className="p-4 text-red-500">Failed to load products</p>;
 
