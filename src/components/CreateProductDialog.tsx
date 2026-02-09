@@ -18,7 +18,7 @@ import {
 import type { CreateProuct, Product } from "@/types/product";
 import { ProductValidationSchema } from "@/validation/product.schema";
 import { FormInput } from "@/components/ui/formInput";
-
+import { UseGetAllCategories } from "@/service/category/useCategoryService";
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -36,7 +36,7 @@ export default function CreateProductDialog({
     useCreateProduct();
   const { mutateAsync: updateProduct, isPending: updating } =
     useUpdateProduct();
-
+  const { data: categories = []} = UseGetAllCategories();
   const isUpdate = mode === "update";
 
   const formik = useFormik<CreateProuct>({
@@ -50,9 +50,7 @@ export default function CreateProductDialog({
       price: defaultValues?.price || 0,
       description: defaultValues?.description || "",
       categoryId: defaultValues?.category?.id || 0,
-      images: defaultValues?.images?.length
-        ? [defaultValues.images[0]]
-        : [""],
+      images: defaultValues?.images?.length ? [defaultValues.images[0]] : [""],
     },
 
     onSubmit: async (values, { resetForm }) => {
@@ -118,19 +116,33 @@ export default function CreateProductDialog({
             error={formik.errors.price}
           />
 
-          <FormInput
-            id="categoryId"
-            label="Category ID"
-            type="number"
-            value={String(formik.values.categoryId)}
-            onChange={(e) =>
-              formik.setFieldValue("categoryId", Number(e.target.value))
-            }
-            onBlur={formik.handleBlur}
-            touched={formik.touched.categoryId}
-            error={formik.errors.categoryId}
-          />
+          <div>
+            <label className="mb-1 block text-sm font-medium">Category</label>
 
+            <select
+              name="categoryId"
+              value={formik.values.categoryId || ""}
+              onChange={(e) =>
+                formik.setFieldValue("categoryId", Number(e.target.value))
+              }
+              onBlur={formik.handleBlur}
+              className="w-full rounded-md border px-3 py-2 text-sm"
+            >
+              <option value="">Select a category</option>
+
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+
+            {formik.touched.categoryId && formik.errors.categoryId && (
+              <p className="mt-1 text-xs text-red-500">
+                {formik.errors.categoryId}
+              </p>
+            )}
+          </div>
           {/* DESCRIPTION (textarea – special case) */}
           <div>
             <label className="mb-1 block text-sm font-medium">
@@ -144,12 +156,11 @@ export default function CreateProductDialog({
               onBlur={formik.handleBlur}
               className="w-full rounded-md border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-black/20"
             />
-            {formik.touched.description &&
-              formik.errors.description && (
-                <p className="mt-1 text-xs text-red-500">
-                  {formik.errors.description}
-                </p>
-              )}
+            {formik.touched.description && formik.errors.description && (
+              <p className="mt-1 text-xs text-red-500">
+                {formik.errors.description}
+              </p>
+            )}
           </div>
 
           {/* IMAGE URL (array index) */}
@@ -173,10 +184,10 @@ export default function CreateProductDialog({
               {updating
                 ? "Updating..."
                 : creating
-                ? "Creating..."
-                : isUpdate
-                ? "Update Product"
-                : "Create Product"}
+                  ? "Creating..."
+                  : isUpdate
+                    ? "Update Product"
+                    : "Create Product"}
             </Button>
           </DialogFooter>
         </form>

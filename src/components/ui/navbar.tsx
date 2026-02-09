@@ -1,5 +1,5 @@
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ROUTES } from "@/constants/ROUTES";
 import { getRole, isAuthenticated, logout } from "@/lib/auth";
@@ -20,7 +20,7 @@ export const Navbar = () => {
     { label: "Products", link: ROUTES.PRODUCTS },
     {label:"Category",link: ROUTES.CATEGORY}
   ];
-
+  const location=useLocation()
   const navItems = role === "admin" ? navItemsAdmin : navItemsUser;
   const avatar = localStorage.getItem("user_image") || "/default-avatar.png"
   return (
@@ -65,15 +65,18 @@ export const Navbar = () => {
           </Button>
         )}
 
-        {isAuthenticated() ? (
-          <Button variant="outline" onClick={logout}>
-            Logout
-          </Button>
-        ) : (
-          <Button onClick={() => navigate(ROUTES.LOGIN)}>
-            Login
-          </Button>
-        )}
+       {location.pathname !== ROUTES.LOGIN && (
+  isAuthenticated() ? (
+    <Button variant="outline" onClick={logout}>
+      Logout
+    </Button>
+  ) : (
+    <Button onClick={() => navigate(ROUTES.LOGIN)}>
+      Login
+    </Button>
+  )
+)}
+
       </div>
     </nav>
   );
