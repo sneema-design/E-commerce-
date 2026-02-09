@@ -5,6 +5,7 @@ import {
 import type { Product } from "@/types/product";
 import { Button } from "./ui/button";
 import { Spinner } from "./ui/spinner";
+import DeleteConfirmDialog from "./DeleteConfirmDialog";
 
 type Props = {
   onUpdate: (product: Product) => void;
@@ -16,16 +17,16 @@ export default function ProductTable({ onUpdate }: Props) {
     useDeleteProduct();
 
   const handleDelete = async (id: number) => {
-    if (confirm("Are you sure you want to delete this product?")) {
-      await deleteProduct({ id });
-    }
+    await deleteProduct({ id });
   };
-     if (isPending)
-  return (
-    <p className="flex items-center justify-center">
-      <Spinner/>
-    </p>
-  );
+
+  if (isPending)
+    return (
+      <p className="flex items-center justify-center">
+        <Spinner />
+      </p>
+    );
+
   if (isError)
     return <p className="p-4 text-red-500">Failed to load products</p>;
 
@@ -49,11 +50,11 @@ export default function ProductTable({ onUpdate }: Props) {
                 <img
                   src={product.images?.[0]}
                   alt={product.title}
-                  className="w-12 h-12 object-cover rounded"
+                  className="h-12 w-12 rounded object-cover"
                 />
               </td>
 
-              <td className="px-6 py-4 font-medium text-gray-800">
+              <td className="px-6 py-4 font-medium">
                 {product.title}
               </td>
 
@@ -73,13 +74,13 @@ export default function ProductTable({ onUpdate }: Props) {
                   Update
                 </Button>
 
-                <Button
-                  onClick={() => handleDelete(product.id)}
-                  disabled={deletePending}
-                  className="px-3 py-1 text-sm rounded bg-red-500 text-white hover:bg-red-600 disabled:opacity-50"
-                >
-                  Delete
-                </Button>
+                <DeleteConfirmDialog
+                  title="Delete product?"
+                  itemName={product.title}
+                  onConfirm={() => handleDelete(product.id)}
+                  isLoading={deletePending}
+                  triggerClassName="px-3 py-1 text-sm rounded bg-red-500 text-white hover:bg-red-600 disabled:opacity-50"
+                />
               </td>
             </tr>
           ))}
