@@ -20,7 +20,7 @@ export const UseDeleteCategory = () => {
   return useMutation<unknown, Error, { id: number }>({
     mutationFn: ({ id }) => deleteCategory({ id }),
     onSuccess: () => {
-      toast.success("Category deleted successFully");
+      // toast.success("Category deleted successFully");
       queryClient.invalidateQueries({
         queryKey: ["categories"],
       });
@@ -37,7 +37,6 @@ export const UseCreateCategory = () => {
     mutationFn: (categoryData: CategoryFormValue) =>
       createCategory(categoryData),
     onSuccess: () => {
-      toast.success("Category Added successFully");
       queryClient.invalidateQueries({
         queryKey: ["categories"],
       });

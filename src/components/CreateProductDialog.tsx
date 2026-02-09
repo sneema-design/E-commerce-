@@ -63,7 +63,6 @@ export default function CreateProductDialog({
           toast.success("Product updated successfully");
         } else {
           await createProduct(values);
-          toast.success("Product created successfully");
         }
 
         resetForm();

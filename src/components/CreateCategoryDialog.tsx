@@ -59,7 +59,6 @@ export default function CreateCategoryDialog({
           toast.success("Category updated successfully");
         } else {
           await createCategory(values);
-          toast.success("Category created successfully");
         }
 
         resetForm();
